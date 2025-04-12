@@ -21,7 +21,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-game-background text-white p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-game-background home-background text-white p-4 flex items-center justify-center">
       <div className="w-full max-w-md">
         <header className="w-full py-4 mb-6">
           <div className="flex items-center justify-center">
