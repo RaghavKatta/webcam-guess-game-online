@@ -84,6 +84,15 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const timeLeftPercentage = timer / GAME_DURATION;
     const pointsEarned = Math.round(1000 * timeLeftPercentage);
     
+    console.log("Correct guess! Points earned:", pointsEarned, "Time left percentage:", timeLeftPercentage);
+    
+    // Update score state with the newly earned points
+    setScore(prevScore => {
+      const newScore = prevScore + pointsEarned;
+      console.log("Previous score:", prevScore, "New score:", newScore);
+      return newScore;
+    });
+    
     addMessage({
       sender: 'System',
       text: `Correct! The word was "${currentWord}" - You earned ${pointsEarned} points!`,
@@ -91,7 +100,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       timestamp: new Date(),
     });
     
-    setScore(prev => prev + pointsEarned);
     setGameState('roundEnd');
     setCurrentWord(null);
     
