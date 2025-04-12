@@ -58,8 +58,8 @@ const WebcamDisplay = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full">
-      <div className="webcam-container w-full bg-white border-4 border-white rounded-xl relative overflow-hidden h-[400px]">
+    <div className="flex flex-col items-center gap-3 w-full">
+      <div className="webcam-container w-full bg-white border-4 border-white rounded-xl relative overflow-hidden">
         <video ref={videoRef} className={`w-full h-full object-cover rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'}`} muted playsInline />
         
         {!webcamActive && !loading && !error && (
