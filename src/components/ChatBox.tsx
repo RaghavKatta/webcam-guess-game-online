@@ -63,7 +63,7 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-[300px] border-4 border-white rounded-xl bg-white shadow-md overflow-hidden mt-4">
+    <div className="flex flex-col h-full border-4 border-white rounded-xl bg-white shadow-md overflow-hidden mt-4">
       <div className="p-3 bg-game-primary text-white font-bold text-lg">
         Guesses & Chat
       </div>

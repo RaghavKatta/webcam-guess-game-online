@@ -10,11 +10,11 @@ import { GameProvider } from '@/components/GameProvider';
 const Index = () => {
   return (
     <GameProvider>
-      <div className="min-h-screen max-w-7xl mx-auto px-4 py-6">
+      <div className="h-screen flex flex-col max-w-7xl mx-auto px-4 py-4">
         <Header />
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-hidden">
+          <div className="lg:col-span-2 flex flex-col gap-4">
             <WebcamDisplay />
             <div className="bg-white border-4 border-white p-4 rounded-xl shadow-md">
               <GameControls />
@@ -23,13 +23,13 @@ const Index = () => {
           
           <div className="flex flex-col h-full">
             <Leaderboard />
-            <div className="flex-grow">
+            <div className="flex-grow overflow-hidden">
               <ChatBox />
             </div>
           </div>
         </div>
         
-        <footer className="mt-12 text-center text-white text-sm">
+        <footer className="mt-4 text-center text-white text-sm py-2">
           <p>© 2025 Guess Leonardo - A fun guessing game with Leonardo!</p>
         </footer>
       </div>
