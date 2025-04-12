@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useGame } from './GameProvider';
 import { Progress } from '@/components/ui/progress';
 import { GAME_DURATION } from './GameProvider';
+import { cn } from '@/lib/utils';
 
 const WebcamDisplay = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -131,7 +132,8 @@ const WebcamDisplay = () => {
               <Progress 
                 value={(timer / GAME_DURATION) * 100} 
                 className="h-4"
-                indicatorClassName={`${timer <= 10 ? 'bg-red-500' : 'bg-game-green'}`}
+                // Update this line to use className with conditional styling instead
+                className={cn("h-4", timer <= 10 ? "bg-red-500" : "bg-game-green")}
               />
             </div>
           </div>

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGame } from './GameProvider';
 import { Progress } from '@/components/ui/progress';
+import { GAME_DURATION } from './GameProvider';
 
 const ChatBox = () => {
   const { messages, addMessage, username, gameState, currentWord, timer } = useGame();
