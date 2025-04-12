@@ -7,15 +7,20 @@ const Header = () => {
     <header className="w-full py-4 mb-6">
       <div className="flex items-center justify-center">
         <h1 className="text-4xl font-bold flex">
-          <span className="colored-text" style={{ color: '#FF5252' }}>w</span>
-          <span className="colored-text" style={{ color: '#FF9800' }}>e</span>
-          <span className="colored-text" style={{ color: '#FFEB3B' }}>b</span>
-          <span className="colored-text" style={{ color: '#4CAF50' }}>c</span>
-          <span className="colored-text" style={{ color: '#00BCD4' }}>a</span>
-          <span className="colored-text" style={{ color: '#4A6CFF' }}>m</span>
-          <span className="colored-text" style={{ color: '#9C27B0' }}>.</span>
-          <span className="colored-text" style={{ color: '#FF4081' }}>i</span>
+          <span className="colored-text" style={{ color: '#FF5252' }}>G</span>
+          <span className="colored-text" style={{ color: '#FF9800' }}>u</span>
+          <span className="colored-text" style={{ color: '#FFEB3B' }}>e</span>
+          <span className="colored-text" style={{ color: '#4CAF50' }}>s</span>
+          <span className="colored-text" style={{ color: '#00BCD4' }}>s</span>
+          <span className="colored-text" style={{ color: '#4A6CFF' }}> </span>
+          <span className="colored-text" style={{ color: '#9C27B0' }}>L</span>
+          <span className="colored-text" style={{ color: '#FF4081' }}>e</span>
           <span className="colored-text" style={{ color: '#FF5252' }}>o</span>
+          <span className="colored-text" style={{ color: '#FF9800' }}>n</span>
+          <span className="colored-text" style={{ color: '#FFEB3B' }}>a</span>
+          <span className="colored-text" style={{ color: '#4CAF50' }}>r</span>
+          <span className="colored-text" style={{ color: '#00BCD4' }}>d</span>
+          <span className="colored-text" style={{ color: '#4A6CFF' }}>o</span>
           <span className="ml-2 animate-float">
             <Camera className="h-10 w-10 text-white" />
           </span>

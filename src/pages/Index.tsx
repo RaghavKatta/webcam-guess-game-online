@@ -26,7 +26,7 @@ const Index = () => {
         </div>
         
         <footer className="mt-12 text-center text-white text-sm">
-          <p>© 2025 Webcam.io - A fun guessing game for everyone!</p>
+          <p>© 2025 Guess Leonardo - A fun guessing game with Leonardo!</p>
         </footer>
       </div>
     </GameProvider>

@@ -1,8 +1,12 @@
-# Welcome to your Lovable project
+# Guess Leonardo
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/ae4426b4-2874-4c2d-90a7-bbd7162f4aaa
+
+## Game Description
+
+Guess Leonardo is an exciting online game where players try to guess what Leonardo, a drawing robot, is creating in real-time!
 
 ## How can I edit this code?
 
