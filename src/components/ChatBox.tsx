@@ -63,13 +63,13 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="flex flex-col h-full border-4 border-white rounded-xl bg-white shadow-md overflow-hidden">
-      <div className="p-2 bg-game-primary text-white font-bold text-lg">
+    <div className="flex flex-col h-[300px] border-4 border-white rounded-xl bg-white shadow-md overflow-hidden mt-4">
+      <div className="p-3 bg-game-primary text-white font-bold text-lg">
         Guesses & Chat
       </div>
       
       {gameState === 'playing' && (
-        <div className="px-3 py-1 bg-gray-100">
+        <div className="px-3 py-2 bg-gray-100">
           <div className="flex justify-between items-center mb-1">
             <span className="text-sm font-medium">Time to guess:</span>
             <span className="text-sm font-bold">{timer}s</span>
@@ -80,7 +80,7 @@ const ChatBox = () => {
       
       <ScrollArea 
         ref={scrollAreaRef} 
-        className="flex-1 p-2 bg-game-chat"
+        className="flex-1 p-4 bg-game-chat"
       >
         <div className="flex flex-col">
           {messages.map((msg) => (
@@ -101,7 +101,7 @@ const ChatBox = () => {
       
       <form 
         onSubmit={handleSendMessage} 
-        className="p-2 border-t-2 border-gray-200 flex gap-2"
+        className="p-3 border-t-2 border-gray-200 flex gap-2"
       >
         <Input
           ref={inputRef}
