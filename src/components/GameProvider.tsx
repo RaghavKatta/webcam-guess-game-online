@@ -29,7 +29,7 @@ export interface Message {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GAME_DURATION = 60; // seconds, now exported
-const FIXED_WORD = 'leonardo'; // Changed to "leonardo" as the robot's name
+const FIXED_WORD = 'apple'; // Changed to "apple" as the correct guess
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>('waiting');
@@ -41,7 +41,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     {
       id: '1',
       sender: 'System',
-      text: 'Welcome to Robot Drawing Guess! Watch as Leonardo the robot draws, and guess what it is!',
+      text: 'Welcome to Guess Leonardo! Watch as Leonardo the robot draws, and guess what it is!',
       type: 'system',
       timestamp: new Date(),
     },
@@ -95,7 +95,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     addMessage({
       sender: 'System',
-      text: `Correct! You identified Leonardo the robot! You earned ${pointsEarned} points!`,
+      text: `Correct! You identified an apple! You earned ${pointsEarned} points!`,
       type: 'correct',
       timestamp: new Date(),
     });
