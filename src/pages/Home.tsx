@@ -21,35 +21,42 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-800 to-black p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-center">Welcome to Guess Leonardo!</CardTitle>
-          <CardDescription>
-            The fun guessing game where Leonardo the robot draws, and you try to guess what it is!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium">
-                Enter your name to begin:
-              </label>
-              <Input
-                id="name"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
-              Start Playing
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-game-background text-white p-4 flex items-center justify-center">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-4">Guess Leonardo!</h1>
+          <p className="text-white/80">Show objects on your webcam for others to guess in the chat!</p>
+        </div>
+        <Card className="w-full bg-white/10 backdrop-blur-lg border border-white/20">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-white">Enter Your Name</CardTitle>
+            <CardDescription className="text-white/70">
+              Choose a username to start playing
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Input
+                  id="name"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-white/20 text-white placeholder-white/50 border-white/30 focus:border-white/50"
+                  required
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-game-green hover:bg-game-green/90 text-white"
+                disabled={!name.trim()}
+              >
+                Start Playing
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
