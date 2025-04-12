@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Camera, CameraOff, Loader2, AlertTriangle } from 'lucide-react';
+import { Camera, CameraOff, Loader2, AlertTriangle, WifiOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGame } from './GameProvider';
 import socketService from '@/services/socketService';
@@ -17,10 +17,12 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   const { gameState, timer } = useGame();
   const [roomId, setRoomId] = useState<string | null>(null);
   const [isMockMode, setIsMockMode] = useState(false);
+  const [connectionAttempts, setConnectionAttempts] = useState(0);
 
   const startWebcam = async () => {
     console.log('Starting webcam:', isStreamer ? 'as streamer' : 'as viewer');
     setLoading(true);
+    setConnectionAttempts(prev => prev + 1);
     
     try {
       if (isStreamer) {
@@ -52,8 +54,10 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         if (currentRoomId) {
           setRoomId(currentRoomId);
           toast({
-            title: "Stream started!",
-            description: `Your stream ID is: ${currentRoomId}`,
+            title: isMockMode ? "Local Mode Active" : "Stream started!",
+            description: isMockMode 
+              ? "Using local camera due to connection issues" 
+              : `Your stream ID is: ${currentRoomId}`,
           });
         }
       } else {
@@ -131,6 +135,9 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
       }
     });
 
+    // Check connection status on mount
+    setIsMockMode(socketService.isMockMode());
+
     // Clean up on unmount
     return () => {
       stopWebcam();
@@ -140,9 +147,16 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl relative">
+        {isMockMode && (
+          <div className="absolute top-0 left-0 right-0 z-10 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-t-lg flex items-center justify-center font-medium text-sm">
+            <WifiOff className="h-4 w-4 mr-2" />
+            <span>Network Connection Issues - Using Local Mode</span>
+          </div>
+        )}
+        
         <video 
           ref={videoRef} 
-          className={`rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'} object-contain w-full h-auto`}
+          className={`rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'} object-contain w-full h-auto ${isMockMode ? 'mt-8' : ''}`}
           muted
           playsInline
         />
@@ -157,15 +171,31 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
                 {isStreamer ? "Camera is off" : "Not connected to stream"}
               </h3>
               {isStreamer ? (
-                <Button 
-                  onClick={startWebcam}
-                  className="bg-game-green hover:bg-game-green/90 text-white font-bold py-2 px-6 rounded-lg text-lg"
-                >
-                  <Camera className="mr-2 h-6 w-6" />
-                  Start Camera
-                </Button>
+                <div className="space-y-2">
+                  <Button 
+                    onClick={startWebcam}
+                    className="bg-game-green hover:bg-game-green/90 text-white font-bold py-2 px-6 rounded-lg text-lg"
+                  >
+                    <Camera className="mr-2 h-6 w-6" />
+                    Start Camera
+                  </Button>
+                  {connectionAttempts > 0 && (
+                    <p className="text-amber-600 text-sm flex items-center justify-center">
+                      <AlertTriangle className="h-4 w-4 mr-1" />
+                      Server connection issues detected. Will use local mode.
+                    </p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-600 mb-4">Enter a stream ID to connect</p>
+                <div>
+                  <p className="text-gray-600 mb-4">Enter a stream ID to connect</p>
+                  {connectionAttempts > 0 && (
+                    <p className="text-amber-600 text-sm flex items-center justify-center">
+                      <AlertTriangle className="h-4 w-4 mr-1" />
+                      Server connection issues detected. Local mode only.
+                    </p>
+                  )}
+                </div>
               )}
             </div>
           </div>
@@ -178,6 +208,11 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
               <p className="text-xl">
                 {isStreamer ? "Connecting to camera..." : "Connecting to stream..."}
               </p>
+              {isMockMode && (
+                <p className="text-amber-600 mt-2">
+                  Using local mode due to connection issues
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -189,7 +224,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         )}
         
         {isMockMode && webcamActive && (
-          <div className="absolute top-4 left-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full flex items-center text-sm font-medium">
+          <div className="absolute top-4 right-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full flex items-center text-sm font-medium">
             <AlertTriangle className="h-4 w-4 mr-1" />
             Local Mode
           </div>

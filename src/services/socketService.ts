@@ -1,4 +1,3 @@
-
 import io, { Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { toast } from '@/hooks/use-toast';
@@ -15,6 +14,8 @@ class SocketService {
   private roomId: string | null = null;
   private isInitiator = false;
   private mockMode = false;
+  private connectionRetries = 0;
+  private maxRetries = 2;
 
   // Callbacks
   private onStreamCallback: ((stream: MediaStream) => void) | null = null;
@@ -22,18 +23,26 @@ class SocketService {
   private onDisconnectedCallback: (() => void) | null = null;
 
   constructor() {
-    this.connect();
+    // Check if we've had CORS issues in the past based on localStorage
+    const hasPreviousCorsIssues = localStorage.getItem('webcam-cors-issues') === 'true';
+    
+    if (hasPreviousCorsIssues) {
+      console.log('Previous CORS issues detected, starting in mock mode');
+      this.mockMode = true;
+    } else {
+      this.connect();
+    }
   }
 
   connect() {
-    if (this.socket) return;
+    if (this.socket || this.mockMode) return;
     
     try {
       console.log('Attempting to connect to signaling server...');
       
       // Create socket connection with error handling
       this.socket = io(SOCKET_SERVER, {
-        reconnectionAttempts: 3,
+        reconnectionAttempts: this.maxRetries,
         timeout: 10000,
         transports: ['websocket', 'polling']
       });
@@ -44,12 +53,12 @@ class SocketService {
       setTimeout(() => {
         if (!this.socket?.connected) {
           console.warn('Socket connection failed, switching to mock mode');
-          this.enableMockMode();
+          this.enableMockMode(true);
         }
       }, 5000);
     } catch (error) {
       console.error('Error creating socket connection:', error);
-      this.enableMockMode();
+      this.enableMockMode(true);
     }
   }
 
@@ -58,11 +67,17 @@ class SocketService {
     
     this.socket.on('connect', () => {
       console.log('Connected to signaling server');
+      // Reset localStorage flag on successful connection
+      localStorage.removeItem('webcam-cors-issues');
     });
 
     this.socket.on('connect_error', (error) => {
       console.error('Connection error:', error);
-      this.enableMockMode();
+      this.connectionRetries++;
+      
+      if (this.connectionRetries >= this.maxRetries) {
+        this.enableMockMode(true);
+      }
     });
 
     this.socket.on('room-created', (roomId: string) => {
@@ -114,11 +129,16 @@ class SocketService {
   }
 
   // Enable mock mode when CORS or connection issues occur
-  private enableMockMode() {
+  private enableMockMode(persistFlag = false) {
     if (this.mockMode) return;
     
     console.log('Switching to mock mode due to connection issues');
     this.mockMode = true;
+    
+    // Store this decision in localStorage if needed
+    if (persistFlag) {
+      localStorage.setItem('webcam-cors-issues', 'true');
+    }
     
     // Clean up any existing socket connection attempts
     if (this.socket) {
@@ -292,7 +312,8 @@ class SocketService {
       this.socket = null;
     }
     
-    this.mockMode = false;
+    // Don't reset mockMode here - we want to keep that setting
+    // this.mockMode = false;
   }
 
   // Register callback for when remote stream is received
@@ -319,7 +340,7 @@ class SocketService {
   onDisconnected(callback: () => void) {
     this.onDisconnectedCallback = callback;
   }
-
+  
   // Get the current room ID (for sharing)
   getRoomId() {
     return this.roomId;
@@ -328,6 +349,13 @@ class SocketService {
   // Check if we're in mock mode
   isMockMode() {
     return this.mockMode;
+  }
+  
+  // Reset mock mode (useful for testing)
+  resetMockMode() {
+    this.mockMode = false;
+    localStorage.removeItem('webcam-cors-issues');
+    console.log('Mock mode reset, will try server connection on next attempt');
   }
 }
 
