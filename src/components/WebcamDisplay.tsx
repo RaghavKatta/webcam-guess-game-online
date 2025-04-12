@@ -4,7 +4,11 @@ import { Camera, CameraOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGame } from './GameProvider';
 
-const WebcamDisplay = () => {
+interface WebcamDisplayProps {
+  isStreamer?: boolean;
+}
+
+const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [webcamActive, setWebcamActive] = useState(false);
   const [loading, setLoading] = useState(false);
