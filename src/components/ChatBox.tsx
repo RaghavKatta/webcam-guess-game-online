@@ -78,11 +78,12 @@ const ChatBox = () => {
         </div>
       )}
       
-      <ScrollArea 
-        className="flex-1 p-4 bg-game-chat overflow-y-auto"
+      <div 
+        ref={scrollAreaRef} 
+        className="flex-1 p-4 bg-game-chat overflow-auto"
         style={{ maxHeight: "calc(100% - 120px)" }}
       >
-        <div className="flex flex-col" ref={scrollAreaRef}>
+        <div className="flex flex-col">
           {messages.map((msg) => (
             <div 
               key={msg.id} 
@@ -97,7 +98,7 @@ const ChatBox = () => {
             </div>
           ))}
         </div>
-      </ScrollArea>
+      </div>
       
       <form 
         onSubmit={handleSendMessage} 
