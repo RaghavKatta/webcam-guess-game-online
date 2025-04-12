@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Play, StopCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -91,9 +90,12 @@ const GameControls = () => {
           )}
         </div>
         
-        <div className="flex justify-between items-center">
-          <div className="text-sm font-medium">Score:</div>
-          <div className="text-2xl font-bold text-game-primary">{score}</div>
+        <div className="flex justify-between items-center p-3 bg-gray-100 rounded-lg">
+          <div className="text-sm font-medium">Your Score:</div>
+          <div className="flex flex-col items-end">
+            <div className="text-2xl font-bold text-game-primary">{score}</div>
+            <div className="text-xs text-gray-500">Points earned this session</div>
+          </div>
         </div>
       </CardContent>
     </Card>
