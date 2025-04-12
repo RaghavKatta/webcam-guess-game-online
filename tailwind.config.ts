@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			scale: {
+				'80': '0.8',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -67,9 +69,9 @@ export default {
 					primary: '#4A6CFF',
 					secondary: '#FF5E5E',
 					accent: '#F9C846',
-					background: '#334CBB', // Changed to blue like skribbl.io
+					background: '#334CBB',
 					chat: '#F8F9FA',
-					green: '#4CAF50', // Added for the play button
+					green: '#4CAF50',
 					red: '#FF5252',
 					orange: '#FF9800',
 					yellow: '#FFEB3B',
