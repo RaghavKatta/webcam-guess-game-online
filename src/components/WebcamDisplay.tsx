@@ -18,20 +18,30 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   const [roomId, setRoomId] = useState<string | null>(null);
 
   const startWebcam = async () => {
+    console.log('Starting webcam:', isStreamer ? 'as streamer' : 'as viewer');
     setLoading(true);
+    
     try {
       if (isStreamer) {
         // For streamer: start broadcasting
-        const stream = await socketService.startStreaming();
+        console.log('Starting streaming via socketService');
+        await socketService.startStreaming();
         
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.onloadedmetadata = () => {
-            videoRef.current?.play();
-            setWebcamActive(true);
-            setLoading(false);
-          };
-        }
+        // Set up stream callback
+        socketService.onStream((stream) => {
+          console.log('Received stream from socketService');
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.onloadedmetadata = () => {
+              console.log('Video metadata loaded, playing video');
+              videoRef.current?.play().catch(err => {
+                console.error('Error playing video:', err);
+              });
+              setWebcamActive(true);
+              setLoading(false);
+            };
+          }
+        });
         
         // Set room ID for sharing
         const currentRoomId = socketService.getRoomId();
@@ -45,10 +55,13 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
       } else {
         // For viewer: just display remote stream
         socketService.onStream((stream) => {
+          console.log('Viewer received stream');
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.onloadedmetadata = () => {
-              videoRef.current?.play();
+              videoRef.current?.play().catch(err => {
+                console.error('Error playing video:', err);
+              });
               setWebcamActive(true);
               setLoading(false);
             };
@@ -67,6 +80,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   };
 
   const stopWebcam = () => {
+    console.log('Stopping webcam');
     socketService.disconnect();
     
     if (videoRef.current && videoRef.current.srcObject) {
@@ -78,6 +92,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
 
   // Join a specific room (for viewers)
   const joinRoom = (id: string) => {
+    console.log('Joining room:', id);
     setLoading(true);
     socketService.joinRoom(id);
     toast({
@@ -89,6 +104,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   useEffect(() => {
     // Setup callbacks for connection status
     socketService.onConnected(() => {
+      console.log('SocketService connected callback fired');
       toast({
         title: "Connected!",
         description: isStreamer ? "Viewers can now see your stream" : "You're now connected to the stream",
@@ -96,6 +112,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
     });
 
     socketService.onDisconnected(() => {
+      console.log('SocketService disconnected callback fired');
       if (webcamActive) {
         toast({
           title: "Disconnected",
@@ -114,7 +131,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl">
+      <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl relative">
         <video 
           ref={videoRef} 
           className={`rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'} object-contain w-full h-auto`}
@@ -123,7 +140,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         />
         
         {!webcamActive && !loading && (
-          <div className="webcam-overlay">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
             <div className="text-center p-6">
               <div className="bg-game-secondary inline-block p-4 rounded-full mb-4">
                 <CameraOff className="h-16 w-16" />
@@ -147,7 +164,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         )}
         
         {loading && (
-          <div className="webcam-overlay">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
             <div className="text-center">
               <Loader2 className="animate-spin h-16 w-16 mb-4 mx-auto text-game-green" />
               <p className="text-xl">

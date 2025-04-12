@@ -95,9 +95,19 @@ class SocketService {
   // Start streaming (for streamers)
   async startStreaming() {
     try {
-      this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      console.log('Attempting to access webcam...');
+      this.localStream = await navigator.mediaDevices.getUserMedia({ 
+        video: true, 
+        audio: false 
+      });
       
+      console.log('Webcam access successful, creating room');
       this.createRoom();
+      
+      if (this.onStreamCallback) {
+        console.log('Calling onStreamCallback with local stream');
+        this.onStreamCallback(this.localStream);
+      }
       
       return this.localStream;
     } catch (err) {
@@ -108,40 +118,46 @@ class SocketService {
 
   // Initialize peer connection
   private initializePeer() {
-    const config = {
-      initiator: this.isInitiator,
-      stream: this.localStream || undefined,
-      trickle: false,
-    };
+    console.log('Initializing peer connection, initiator:', this.isInitiator);
+    
+    try {
+      const config = {
+        initiator: this.isInitiator,
+        stream: this.localStream || undefined,
+        trickle: false,
+      };
 
-    this.peer = new Peer(config);
+      this.peer = new Peer(config);
 
-    this.peer.on('signal', (data) => {
-      console.log('Generated signal data');
-      if (this.socket && this.roomId) {
-        this.socket.emit('signal', { roomId: this.roomId, signal: data });
-      }
-    });
+      this.peer.on('signal', (data) => {
+        console.log('Generated signal data');
+        if (this.socket && this.roomId) {
+          this.socket.emit('signal', { roomId: this.roomId, signal: data });
+        }
+      });
 
-    this.peer.on('connect', () => {
-      console.log('Peer connection established');
-      if (this.onConnectedCallback) {
-        this.onConnectedCallback();
-      }
-    });
+      this.peer.on('connect', () => {
+        console.log('Peer connection established');
+        if (this.onConnectedCallback) {
+          this.onConnectedCallback();
+        }
+      });
 
-    this.peer.on('stream', (stream) => {
-      console.log('Received remote stream');
-      this.remoteStream = stream;
-      if (this.onStreamCallback) {
-        this.onStreamCallback(stream);
-      }
-    });
+      this.peer.on('stream', (stream) => {
+        console.log('Received remote stream');
+        this.remoteStream = stream;
+        if (this.onStreamCallback) {
+          this.onStreamCallback(stream);
+        }
+      });
 
-    this.peer.on('error', (err) => {
-      console.error('Peer connection error:', err);
-      this.cleanupPeer();
-    });
+      this.peer.on('error', (err) => {
+        console.error('Peer connection error:', err);
+        this.cleanupPeer();
+      });
+    } catch (error) {
+      console.error('Error creating peer:', error);
+    }
   }
 
   // Clean up peer connection
@@ -169,7 +185,17 @@ class SocketService {
 
   // Register callback for when remote stream is received
   onStream(callback: (stream: MediaStream) => void) {
+    console.log('Registering onStream callback');
     this.onStreamCallback = callback;
+    
+    // If we already have a stream, call the callback immediately
+    if (this.localStream && this.isInitiator) {
+      console.log('Already have local stream, calling callback immediately');
+      callback(this.localStream);
+    } else if (this.remoteStream && !this.isInitiator) {
+      console.log('Already have remote stream, calling callback immediately');
+      callback(this.remoteStream);
+    }
   }
 
   // Register callback for when connection is established
