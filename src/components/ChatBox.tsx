@@ -51,6 +51,17 @@ const ChatBox = () => {
     }
   }, [messages]);
 
+  // Get placeholder text based on game state
+  const getPlaceholderText = () => {
+    if (gameState === 'playing') {
+      return "Type your guess...";
+    } else if (gameState === 'roundEnd') {
+      return "Round ended - wait for next round to start";
+    } else {
+      return "Waiting for round to start...";
+    }
+  };
+
   return (
     <div className="flex flex-col h-full border-4 border-white rounded-xl bg-white shadow-md overflow-hidden">
       <div className="p-3 bg-game-primary text-white font-bold text-lg">
@@ -96,7 +107,7 @@ const ChatBox = () => {
           ref={inputRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder={gameState === 'playing' ? "Type your guess..." : "Waiting for round to start..."}
+          placeholder={getPlaceholderText()}
           disabled={gameState !== 'playing'}
           className="flex-1 rounded-lg border-2 border-gray-300 focus:border-game-primary"
         />

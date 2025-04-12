@@ -1,5 +1,6 @@
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 type GameState = 'waiting' | 'playing' | 'roundEnd';
 
@@ -79,19 +80,24 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const correctGuess = () => {
+    // Calculate score based on time left (percentage)
+    const timeLeftPercentage = timer / GAME_DURATION;
+    const pointsEarned = Math.round(1000 * timeLeftPercentage);
+    
     addMessage({
       sender: 'System',
-      text: `Correct! The word was "${currentWord}"`,
+      text: `Correct! The word was "${currentWord}" - You earned ${pointsEarned} points!`,
       type: 'correct',
       timestamp: new Date(),
     });
-    setScore(prev => prev + 10);
+    
+    setScore(prev => prev + pointsEarned);
     setGameState('roundEnd');
     setCurrentWord(null);
     
     toast({
       title: "Good job!",
-      description: "+10 points added to your score!",
+      description: `+${pointsEarned} points added to your score!`,
       duration: 3000,
     });
   };
@@ -104,6 +110,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setMessages(prev => [...prev, newMessage]);
     
+    // Only process guesses if the game is in 'playing' state
     if (
       gameState === 'playing' && 
       message.type === 'user' && 

@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Camera, CameraOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -117,6 +118,16 @@ const WebcamDisplay = () => {
             
             <div className="bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
               Score: <span className="text-game-green">{score}</span>
+            </div>
+          </div>
+        )}
+        
+        {webcamActive && gameState === 'roundEnd' && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            <div className="bg-white p-6 rounded-xl text-center max-w-md">
+              <h2 className="text-2xl font-bold mb-2 text-game-primary">Round Complete!</h2>
+              <p className="text-lg mb-4">Current Score: <span className="font-bold text-game-green">{score}</span></p>
+              <p className="text-sm text-gray-600">Wait for a new round to start or start a new round yourself</p>
             </div>
           </div>
         )}
