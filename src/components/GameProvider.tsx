@@ -11,6 +11,7 @@ interface GameContextType {
   score: number;
   username: string;
   messages: Message[];
+  hasGuessedCorrectly: boolean;
   startGame: () => void;
   endGame: () => void;
   setUsername: (name: string) => void;
@@ -37,6 +38,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [timer, setTimer] = useState(GAME_DURATION);
   const [score, setScore] = useState(0);
   const [username, setUsername] = useState('Player');
+  const [hasGuessedCorrectly, setHasGuessedCorrectly] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -53,6 +55,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setCurrentWord(FIXED_WORD);
     setGameState('playing');
     setTimer(GAME_DURATION);
+    setHasGuessedCorrectly(false);
     
     toast({
       title: "Leonardo is drawing...",
@@ -93,6 +96,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return newScore;
     });
     
+    // Mark that the user has correctly guessed in this round
+    setHasGuessedCorrectly(true);
+    
     addMessage({
       sender: 'System',
       text: `Correct! You identified an apple! You earned ${pointsEarned} points!`,
@@ -119,11 +125,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Process guesses if the game is in 'playing' state
+    // Process guesses if the game is in 'playing' state and user hasn't already guessed correctly
     if (
       gameState === 'playing' && 
       message.type === 'user' && 
       currentWord && 
+      !hasGuessedCorrectly &&
       message.text.toLowerCase().includes(currentWord.toLowerCase())
     ) {
       correctGuess();
@@ -158,6 +165,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     score,
     username,
     messages,
+    hasGuessedCorrectly,
     startGame,
     endGame,
     setUsername,

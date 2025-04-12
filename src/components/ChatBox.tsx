@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { GAME_DURATION } from './GameProvider';
 
 const ChatBox = () => {
-  const { messages, addMessage, username, gameState, currentWord, timer } = useGame();
+  const { messages, addMessage, username, gameState, currentWord, timer, hasGuessedCorrectly } = useGame();
   const [message, setMessage] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +23,7 @@ const ChatBox = () => {
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (message.trim() && gameState === 'playing') {
+    if (message.trim() && gameState === 'playing' && !hasGuessedCorrectly) {
       addMessage({
         sender: username,
         text: message,
@@ -51,6 +51,9 @@ const ChatBox = () => {
   // Get placeholder text based on game state
   const getPlaceholderText = () => {
     if (gameState === 'playing') {
+      if (hasGuessedCorrectly) {
+        return "You got it right! Wait for the next round...";
+      }
       return "What is Leonardo drawing?";
     } else if (gameState === 'roundEnd') {
       return "Drawing complete - wait for next round";
@@ -105,13 +108,13 @@ const ChatBox = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={getPlaceholderText()}
-          disabled={gameState !== 'playing'}
+          disabled={gameState !== 'playing' || hasGuessedCorrectly}
           className="flex-1 rounded-lg border-2 border-gray-300 focus:border-game-primary"
         />
         <Button 
           type="submit" 
           size="icon" 
-          disabled={gameState !== 'playing'}
+          disabled={gameState !== 'playing' || hasGuessedCorrectly}
           className="bg-game-primary hover:bg-game-primary/90 h-10 w-10 rounded-lg"
         >
           <Send className="h-5 w-5" />
