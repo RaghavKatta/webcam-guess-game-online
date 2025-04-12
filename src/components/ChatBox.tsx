@@ -79,10 +79,10 @@ const ChatBox = () => {
       )}
       
       <ScrollArea 
-        ref={scrollAreaRef} 
-        className="flex-1 p-4 bg-game-chat"
+        className="flex-1 p-4 bg-game-chat overflow-y-auto"
+        style={{ maxHeight: "calc(100% - 120px)" }}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col" ref={scrollAreaRef}>
           {messages.map((msg) => (
             <div 
               key={msg.id} 

@@ -5,7 +5,6 @@ import WebcamDisplay from '@/components/WebcamDisplay';
 import ChatBox from '@/components/ChatBox';
 import GameControls from '@/components/GameControls';
 import Leaderboard from '@/components/Leaderboard';
-import ScoreDisplay from '@/components/ScoreDisplay';
 import { GameProvider } from '@/components/GameProvider';
 
 const Index = () => {
@@ -24,9 +23,6 @@ const Index = () => {
           
           <div className="flex flex-col h-full">
             <Leaderboard />
-            <div className="mb-4">
-              <ScoreDisplay />
-            </div>
             <div className="flex-grow">
               <ChatBox />
             </div>

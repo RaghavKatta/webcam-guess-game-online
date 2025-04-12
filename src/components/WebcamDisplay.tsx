@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Camera, CameraOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { useGame } from './GameProvider';
 import { Progress } from '@/components/ui/progress';
 import { GAME_DURATION } from './GameProvider';
 import { cn } from '@/lib/utils';
+import ScoreDisplay from './ScoreDisplay';
 
 const WebcamDisplay = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -61,6 +61,12 @@ const WebcamDisplay = () => {
     <div className="flex flex-col items-center gap-4 w-full">
       <div className="webcam-container w-full bg-white border-4 border-white rounded-xl relative overflow-hidden h-[400px]">
         <video ref={videoRef} className={`w-full h-full object-cover rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'}`} muted playsInline />
+        
+        {webcamActive && (
+          <div className="absolute top-4 right-4 z-10">
+            <ScoreDisplay />
+          </div>
+        )}
         
         {!webcamActive && !loading && !error && (
           <div className="absolute inset-0 flex items-center justify-center">
