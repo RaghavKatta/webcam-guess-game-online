@@ -67,8 +67,16 @@ export default {
 					primary: '#4A6CFF',
 					secondary: '#FF5E5E',
 					accent: '#F9C846',
-					background: '#F0F4FF',
+					background: '#334CBB', // Changed to blue like skribbl.io
 					chat: '#F8F9FA',
+					green: '#4CAF50', // Added for the play button
+					red: '#FF5252',
+					orange: '#FF9800',
+					yellow: '#FFEB3B',
+					lime: '#CDDC39',
+					cyan: '#00BCD4',
+					purple: '#9C27B0',
+					pink: '#FF4081',
 				}
 			},
 			borderRadius: {
@@ -96,12 +104,17 @@ export default {
 				'pulse-light': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.7' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'float': 'float 3s ease-in-out infinite'
 			}
 		}
 	},

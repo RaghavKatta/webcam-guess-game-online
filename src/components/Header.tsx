@@ -6,13 +6,34 @@ const Header = () => {
   return (
     <header className="w-full py-4 mb-6">
       <div className="flex items-center justify-center">
-        <Camera className="h-8 w-8 text-game-primary mr-2" />
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-game-primary to-game-secondary bg-clip-text text-transparent">
-          Webcam Guess
+        <h1 className="text-4xl font-bold flex">
+          <span className="colored-text" style={{ color: '#FF5252' }}>w</span>
+          <span className="colored-text" style={{ color: '#FF9800' }}>e</span>
+          <span className="colored-text" style={{ color: '#FFEB3B' }}>b</span>
+          <span className="colored-text" style={{ color: '#4CAF50' }}>c</span>
+          <span className="colored-text" style={{ color: '#00BCD4' }}>a</span>
+          <span className="colored-text" style={{ color: '#4A6CFF' }}>m</span>
+          <span className="colored-text" style={{ color: '#9C27B0' }}>.</span>
+          <span className="colored-text" style={{ color: '#FF4081' }}>i</span>
+          <span className="colored-text" style={{ color: '#FF5252' }}>o</span>
+          <span className="ml-2 animate-float">
+            <Camera className="h-10 w-10 text-white" />
+          </span>
         </h1>
-        <MessageCircle className="h-8 w-8 text-game-secondary ml-2" />
       </div>
-      <p className="text-center text-gray-600 mt-2">
+      <div className="flex justify-center mt-2">
+        <div className="flex space-x-2">
+          <div className="avatar" style={{ backgroundColor: '#FF5252' }}>😀</div>
+          <div className="avatar" style={{ backgroundColor: '#FF9800' }}>😎</div>
+          <div className="avatar" style={{ backgroundColor: '#FFEB3B' }}>🤔</div>
+          <div className="avatar" style={{ backgroundColor: '#4CAF50' }}>😮</div>
+          <div className="avatar" style={{ backgroundColor: '#00BCD4' }}>😂</div>
+          <div className="avatar" style={{ backgroundColor: '#4A6CFF' }}>😴</div>
+          <div className="avatar" style={{ backgroundColor: '#9C27B0' }}>🤩</div>
+          <div className="avatar" style={{ backgroundColor: '#FF4081' }}>😍</div>
+        </div>
+      </div>
+      <p className="text-center text-white mt-2">
         Show objects on your webcam for others to guess in the chat!
       </p>
     </header>

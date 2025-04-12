@@ -15,7 +15,9 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <WebcamDisplay />
-            <GameControls />
+            <div className="bg-white border-4 border-white p-4 rounded-xl shadow-md">
+              <GameControls />
+            </div>
           </div>
           
           <div className="h-[600px]">
@@ -23,8 +25,8 @@ const Index = () => {
           </div>
         </div>
         
-        <footer className="mt-12 text-center text-sm text-gray-500">
-          <p>© 2025 Webcam Guess Game. All rights reserved.</p>
+        <footer className="mt-12 text-center text-white text-sm">
+          <p>© 2025 Webcam.io - A fun guessing game for everyone!</p>
         </footer>
       </div>
     </GameProvider>

@@ -40,8 +40,8 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full border rounded-xl bg-white shadow-sm overflow-hidden">
-      <div className="p-3 bg-game-primary text-white font-semibold">
+    <div className="flex flex-col h-full border-4 border-white rounded-xl bg-white shadow-md overflow-hidden">
+      <div className="p-3 bg-game-primary text-white font-bold text-lg">
         Chat & Guesses
       </div>
       
@@ -68,7 +68,7 @@ const ChatBox = () => {
       
       <form 
         onSubmit={handleSendMessage} 
-        className="p-3 border-t flex gap-2"
+        className="p-3 border-t-2 border-gray-200 flex gap-2"
       >
         <Input
           ref={inputRef}
@@ -76,15 +76,15 @@ const ChatBox = () => {
           onChange={(e) => setMessage(e.target.value)}
           placeholder={gameState === 'playing' ? "Type your guess..." : "Waiting for round to start..."}
           disabled={gameState !== 'playing'}
-          className="flex-1"
+          className="flex-1 rounded-lg border-2 border-gray-300 focus:border-game-primary"
         />
         <Button 
           type="submit" 
           size="icon" 
           disabled={gameState !== 'playing'}
-          className="bg-game-primary hover:bg-game-primary/90"
+          className="bg-game-primary hover:bg-game-primary/90 h-10 w-10 rounded-lg"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-5 w-5" />
         </Button>
       </form>
     </div>

@@ -49,10 +49,10 @@ const WebcamDisplay = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="webcam-container w-full max-w-2xl bg-white">
+      <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl">
         <video 
           ref={videoRef} 
-          className={`rounded-xl ${webcamActive ? 'opacity-100' : 'opacity-0'}`}
+          className={`rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'}`}
           muted
           playsInline
         />
@@ -60,13 +60,15 @@ const WebcamDisplay = () => {
         {!webcamActive && !loading && (
           <div className="webcam-overlay">
             <div className="text-center p-6">
-              <CameraOff className="mx-auto h-16 w-16 mb-4" />
-              <h3 className="text-xl font-bold mb-4">Camera is off</h3>
+              <div className="bg-game-secondary inline-block p-4 rounded-full mb-4">
+                <CameraOff className="h-16 w-16" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Camera is off</h3>
               <Button 
                 onClick={startWebcam}
-                className="bg-game-primary hover:bg-game-primary/90"
+                className="bg-game-green hover:bg-game-green/90 text-white font-bold py-2 px-6 rounded-lg text-lg"
               >
-                <Camera className="mr-2 h-4 w-4" />
+                <Camera className="mr-2 h-6 w-6" />
                 Start Camera
               </Button>
             </div>
@@ -76,14 +78,14 @@ const WebcamDisplay = () => {
         {loading && (
           <div className="webcam-overlay">
             <div className="text-center">
-              <Loader2 className="animate-spin h-12 w-12 mb-4 mx-auto" />
-              <p className="text-lg">Connecting to camera...</p>
+              <Loader2 className="animate-spin h-16 w-16 mb-4 mx-auto text-game-green" />
+              <p className="text-xl">Connecting to camera...</p>
             </div>
           </div>
         )}
         
         {webcamActive && gameState === 'playing' && (
-          <div className="absolute top-4 right-4 bg-game-primary text-white font-bold text-xl rounded-full h-14 w-14 flex items-center justify-center animate-pulse-light">
+          <div className="absolute top-4 right-4 bg-white text-game-primary font-bold text-2xl rounded-full h-16 w-16 flex items-center justify-center border-4 border-game-primary">
             {timer}
           </div>
         )}
@@ -93,9 +95,9 @@ const WebcamDisplay = () => {
         <Button 
           variant="outline" 
           onClick={stopWebcam}
-          className="border-red-300 text-red-500 hover:bg-red-50"
+          className="border-game-red text-game-red hover:bg-game-red/10 font-semibold"
         >
-          <CameraOff className="mr-2 h-4 w-4" />
+          <CameraOff className="mr-2 h-5 w-5" />
           Turn Off Camera
         </Button>
       )}
