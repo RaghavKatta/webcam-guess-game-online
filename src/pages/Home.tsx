@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,9 +22,9 @@ const Home = () => {
 
   return (
     <div 
-      className="min-h-screen max-w-7xl mx-auto px-4 py-2 transform scale-80 origin-top bg-cover bg-center" 
+      className="min-h-screen flex items-center justify-center px-4 py-2 bg-cover bg-center" 
       style={{ 
-        backgroundImage: `url('/lovable-uploads/c0497966-ffcf-4b0e-b822-46ab2f45bc67.png')` 
+        backgroundImage: `url('/lovable-uploads/00be9732-cb60-4dc2-a1eb-45c11240426a.png')` 
       }}
     >
       <div className="w-full max-w-md">
