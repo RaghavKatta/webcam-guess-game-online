@@ -2,20 +2,14 @@
 import React from 'react';
 import Header from '@/components/Header';
 import WebcamDisplay from '@/components/WebcamDisplay';
+import ChatBox from '@/components/ChatBox';
 import { GameProvider } from '@/components/GameProvider';
 import { Button } from '@/components/ui/button';
-import { Share } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Stream = () => {
   const navigate = useNavigate();
-  
-  const handleShareLink = () => {
-    // Generate a viewing link that others can use
-    const viewURL = `${window.location.origin}/view`;
-    navigator.clipboard.writeText(viewURL);
-    alert("Viewing link copied to clipboard! Share this with your friends.");
-  };
 
   return (
     <GameProvider>
@@ -27,29 +21,25 @@ const Stream = () => {
           <p className="text-white">You are the host. Show objects on your webcam for others to guess!</p>
         </div>
         
-        <div className="grid grid-cols-1 gap-6">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
             <WebcamDisplay isStreamer={true} />
-            <div className="bg-white border-4 border-white p-4 rounded-xl shadow-md">
-              <div className="flex items-center justify-between">
-                <Button 
-                  onClick={handleShareLink}
-                  className="bg-game-green hover:bg-game-green/90 text-white"
-                >
-                  <Share className="mr-2 h-5 w-5" />
-                  Share Viewing Link
-                </Button>
-                
-                <Button 
-                  onClick={() => navigate('/view')}
-                  variant="outline"
-                  className="border-game-primary text-game-primary"
-                >
-                  Switch to Viewing Mode
-                </Button>
-              </div>
-            </div>
           </div>
+          
+          <div className="h-[600px]">
+            <ChatBox />
+          </div>
+        </div>
+        
+        <div className="mt-6 text-center">
+          <Button 
+            onClick={() => navigate('/view')}
+            variant="outline"
+            className="border-white text-white hover:bg-white/10"
+          >
+            <Users className="mr-2 h-5 w-5" />
+            Switch to Viewing Mode
+          </Button>
         </div>
         
         <footer className="mt-12 text-center text-white text-sm">

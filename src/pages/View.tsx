@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import ChatBox from '@/components/ChatBox';
+import WebcamDisplay from '@/components/WebcamDisplay';
 import { GameProvider } from '@/components/GameProvider';
 import { Button } from '@/components/ui/button';
 import { Camera } from 'lucide-react';
@@ -22,16 +23,7 @@ const View = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="flex flex-col items-center gap-4">
-              <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl">
-                <div className="stream-placeholder h-[400px] flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <h3 className="text-2xl font-bold mb-4">Waiting for stream...</h3>
-                    <p className="text-gray-600 mb-4">The streamer will appear here once connected.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <WebcamDisplay isStreamer={false} />
           </div>
           
           <div className="h-[600px]">
