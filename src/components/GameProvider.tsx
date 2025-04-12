@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -28,7 +27,7 @@ export interface Message {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-const GAME_DURATION = 60; // seconds
+export const GAME_DURATION = 60; // seconds, now exported
 const FIXED_WORD = 'apple'; // The fixed word to guess
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -50,12 +49,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const { toast } = useToast();
 
   const startGame = () => {
-    // Use the fixed word instead of getting a random one
     setCurrentWord(FIXED_WORD);
     setGameState('playing');
     setTimer(GAME_DURATION);
     
-    // Notify only the presenter about the word
     toast({
       title: "Your word to present is:",
       description: FIXED_WORD,
@@ -91,6 +88,12 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setScore(prev => prev + 10);
     setGameState('roundEnd');
     setCurrentWord(null);
+    
+    toast({
+      title: "Good job!",
+      description: "+10 points added to your score!",
+      duration: 3000,
+    });
   };
 
   const addMessage = (message: Omit<Message, 'id'>) => {
@@ -101,7 +104,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Check if the message is a correct guess (case-insensitive)
     if (
       gameState === 'playing' && 
       message.type === 'user' && 
@@ -112,7 +114,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // Timer effect
   useEffect(() => {
     let interval: number;
     

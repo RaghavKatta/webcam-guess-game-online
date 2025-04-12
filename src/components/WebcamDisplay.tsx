@@ -3,13 +3,15 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Camera, CameraOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGame } from './GameProvider';
+import { Progress } from '@/components/ui/progress';
+import { GAME_DURATION } from './GameProvider';
 
 const WebcamDisplay = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [webcamActive, setWebcamActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { gameState, timer, currentWord } = useGame();
+  const { gameState, timer, currentWord, score } = useGame();
 
   const startWebcam = async () => {
     setLoading(true);
@@ -108,14 +110,30 @@ const WebcamDisplay = () => {
         )}
         
         {webcamActive && gameState === 'playing' && (
-          <div className="absolute top-4 right-4 bg-white text-game-primary font-bold text-2xl rounded-full h-16 w-16 flex items-center justify-center border-4 border-game-primary">
-            {timer}
+          <div className="absolute top-0 inset-x-0 p-4 flex justify-between">
+            <div className="bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
+              Current Word: <span className="text-game-green">{currentWord}</span>
+            </div>
+            
+            <div className="bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
+              Score: <span className="text-game-green">{score}</span>
+            </div>
           </div>
         )}
         
-        {webcamActive && gameState === 'playing' && currentWord && (
-          <div className="absolute top-4 left-4 bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
-            Current Word: <span className="text-game-green">{currentWord}</span>
+        {webcamActive && gameState === 'playing' && (
+          <div className="absolute bottom-0 inset-x-0 p-4">
+            <div className="bg-white/90 rounded-lg p-3 shadow-lg">
+              <div className="flex justify-between items-center mb-1">
+                <span className="font-bold">Time Remaining:</span>
+                <span className="font-bold text-xl text-game-primary">{timer}s</span>
+              </div>
+              <Progress 
+                value={(timer / GAME_DURATION) * 100} 
+                className="h-4"
+                indicatorClassName={`${timer <= 10 ? 'bg-red-500' : 'bg-game-green'}`}
+              />
+            </div>
           </div>
         )}
       </div>

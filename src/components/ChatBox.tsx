@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGame } from './GameProvider';
+import { Progress } from '@/components/ui/progress';
 
 const ChatBox = () => {
-  const { messages, addMessage, username, gameState, currentWord } = useGame();
+  const { messages, addMessage, username, gameState, currentWord, timer } = useGame();
   const [message, setMessage] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,6 +55,16 @@ const ChatBox = () => {
       <div className="p-3 bg-game-primary text-white font-bold text-lg">
         Chat & Guesses
       </div>
+      
+      {gameState === 'playing' && (
+        <div className="px-3 py-2 bg-gray-100">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-sm font-medium">Time remaining:</span>
+            <span className="text-sm font-bold">{timer}s</span>
+          </div>
+          <Progress value={(timer / GAME_DURATION) * 100} className="h-2" />
+        </div>
+      )}
       
       <ScrollArea 
         ref={scrollAreaRef} 
