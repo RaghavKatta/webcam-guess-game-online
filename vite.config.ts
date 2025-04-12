@@ -21,6 +21,8 @@ export default defineConfig(({ mode }) => ({
     },
   },
   define: {
-    global: 'window', // Add this line to polyfill global for simple-peer
+    global: 'window', // Polyfill global for simple-peer
+    // Add empty chrome object if it doesn't exist
+    'chrome.runtime': '(window.chrome && window.chrome.runtime) || {}',
   },
 }));

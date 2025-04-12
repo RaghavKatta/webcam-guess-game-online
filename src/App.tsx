@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Stream from "./pages/Stream";
 import View from "./pages/View";
 import NotFound from "./pages/NotFound";
+import "@/services/chromeMessageService"; // Import to initialize Chrome message listeners
 
 const queryClient = new QueryClient();
 
