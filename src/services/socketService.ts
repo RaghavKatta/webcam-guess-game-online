@@ -2,9 +2,8 @@ import io, { Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { toast } from '@/hooks/use-toast';
 
-// For development, we'll use a free Socket.io server
-// In production, you should use your own server
-const SOCKET_SERVER = 'https://webcam-guess-server.glitch.me';
+// Updated to the new server URL
+const SOCKET_SERVER = 'https://leonardo-pomx.onrender.com/';
 
 class SocketService {
   private socket: Socket | null = null;
