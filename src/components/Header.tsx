@@ -4,7 +4,7 @@ import { Camera, MessageCircle } from 'lucide-react';
 
 const Header = () => {
   return (
-    <header className="w-full py-2 mb-2">
+    <header className="w-full py-4 mb-6">
       <div className="flex items-center justify-center">
         <h1 className="text-4xl font-bold flex">
           <span className="colored-text" style={{ color: '#FF5252' }}>G</span>
@@ -26,7 +26,7 @@ const Header = () => {
           </span>
         </h1>
       </div>
-      <div className="flex justify-center mt-1">
+      <div className="flex justify-center mt-2">
         <div className="flex space-x-2">
           <div className="avatar" style={{ backgroundColor: '#FF5252' }}>😀</div>
           <div className="avatar" style={{ backgroundColor: '#FF9800' }}>😎</div>
@@ -38,7 +38,7 @@ const Header = () => {
           <div className="avatar" style={{ backgroundColor: '#FF4081' }}>😍</div>
         </div>
       </div>
-      <p className="text-center text-white mt-1 text-sm">
+      <p className="text-center text-white mt-2">
         Show objects on your webcam for others to guess in the chat!
       </p>
     </header>
