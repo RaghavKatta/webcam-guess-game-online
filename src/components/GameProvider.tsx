@@ -100,9 +100,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       timestamp: new Date(),
     });
     
-    // End the round when a correct guess is made
-    setGameState('roundEnd');
-    setCurrentWord(null);
+    // No longer ending the game when a correct guess is made
+    // setGameState('roundEnd');
+    // setCurrentWord(null);
     
     toast({
       title: "Good job!",
