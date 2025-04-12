@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Camera, CameraOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -131,8 +130,6 @@ const WebcamDisplay = () => {
               </div>
               <Progress 
                 value={(timer / GAME_DURATION) * 100} 
-                className="h-4"
-                // Update this line to use className with conditional styling instead
                 className={cn("h-4", timer <= 10 ? "bg-red-500" : "bg-game-green")}
               />
             </div>
