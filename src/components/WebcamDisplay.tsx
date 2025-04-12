@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Camera, CameraOff, Loader2 } from 'lucide-react';
+import { Camera, CameraOff, Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGame } from './GameProvider';
 import socketService from '@/services/socketService';
@@ -16,6 +16,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
   const [loading, setLoading] = useState(false);
   const { gameState, timer } = useGame();
   const [roomId, setRoomId] = useState<string | null>(null);
+  const [isMockMode, setIsMockMode] = useState(false);
 
   const startWebcam = async () => {
     console.log('Starting webcam:', isStreamer ? 'as streamer' : 'as viewer');
@@ -26,6 +27,9 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         // For streamer: start broadcasting
         console.log('Starting streaming via socketService');
         await socketService.startStreaming();
+        
+        // Check if we're in mock mode
+        setIsMockMode(socketService.isMockMode());
         
         // Set up stream callback
         socketService.onStream((stream) => {
@@ -56,6 +60,8 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
         // For viewer: just display remote stream
         socketService.onStream((stream) => {
           console.log('Viewer received stream');
+          setIsMockMode(socketService.isMockMode());
+          
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
             videoRef.current.onloadedmetadata = () => {
@@ -87,6 +93,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
       videoRef.current.srcObject = null;
       setWebcamActive(false);
       setRoomId(null);
+      setIsMockMode(false);
     }
   };
 
@@ -95,6 +102,7 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
     console.log('Joining room:', id);
     setLoading(true);
     socketService.joinRoom(id);
+    setIsMockMode(socketService.isMockMode());
     toast({
       title: "Joining stream...",
       description: "Connecting to the streamer.",
@@ -179,6 +187,13 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
             {timer}
           </div>
         )}
+        
+        {isMockMode && webcamActive && (
+          <div className="absolute top-4 left-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full flex items-center text-sm font-medium">
+            <AlertTriangle className="h-4 w-4 mr-1" />
+            Local Mode
+          </div>
+        )}
       </div>
       
       {webcamActive ? (
@@ -239,7 +254,11 @@ const WebcamDisplay: React.FC<WebcamDisplayProps> = ({ isStreamer = false }) => 
               Copy
             </Button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">Share this ID with viewers so they can join your stream</p>
+          <p className="text-xs text-gray-500 mt-2">
+            {isMockMode 
+              ? "Currently in local mode due to connection issues. Only you can see the stream." 
+              : "Share this ID with viewers so they can join your stream"}
+          </p>
         </div>
       )}
     </div>

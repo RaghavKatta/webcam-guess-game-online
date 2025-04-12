@@ -1,6 +1,7 @@
 
 import io, { Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
+import { toast } from '@/hooks/use-toast';
 
 // For development, we'll use a free Socket.io server
 // In production, you should use your own server
@@ -13,6 +14,7 @@ class SocketService {
   private remoteStream: MediaStream | null = null;
   private roomId: string | null = null;
   private isInitiator = false;
+  private mockMode = false;
 
   // Callbacks
   private onStreamCallback: ((stream: MediaStream) => void) | null = null;
@@ -26,10 +28,41 @@ class SocketService {
   connect() {
     if (this.socket) return;
     
-    this.socket = io(SOCKET_SERVER);
+    try {
+      console.log('Attempting to connect to signaling server...');
+      
+      // Create socket connection with error handling
+      this.socket = io(SOCKET_SERVER, {
+        reconnectionAttempts: 3,
+        timeout: 10000,
+        transports: ['websocket', 'polling']
+      });
+      
+      this.setupSocketEventHandlers();
+      
+      // Set a timeout to check if connection was successful
+      setTimeout(() => {
+        if (!this.socket?.connected) {
+          console.warn('Socket connection failed, switching to mock mode');
+          this.enableMockMode();
+        }
+      }, 5000);
+    } catch (error) {
+      console.error('Error creating socket connection:', error);
+      this.enableMockMode();
+    }
+  }
+
+  private setupSocketEventHandlers() {
+    if (!this.socket) return;
     
     this.socket.on('connect', () => {
       console.log('Connected to signaling server');
+    });
+
+    this.socket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      this.enableMockMode();
     });
 
     this.socket.on('room-created', (roomId: string) => {
@@ -80,14 +113,57 @@ class SocketService {
     });
   }
 
+  // Enable mock mode when CORS or connection issues occur
+  private enableMockMode() {
+    if (this.mockMode) return;
+    
+    console.log('Switching to mock mode due to connection issues');
+    this.mockMode = true;
+    
+    // Clean up any existing socket connection attempts
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+    
+    toast({
+      title: "Connection Issue",
+      description: "Using local mode due to connection problems",
+      variant: "default"
+    });
+    
+    // Generate a fake room ID
+    this.roomId = 'local-' + Math.random().toString(36).substring(2, 7);
+  }
+
   // Create a new room as a streamer
   createRoom() {
+    if (this.mockMode) {
+      console.log('Creating mock room:', this.roomId);
+      this.isInitiator = true;
+      return;
+    }
+    
     if (!this.socket) this.connect();
     this.socket?.emit('create-room');
   }
 
   // Join an existing room as a viewer
   joinRoom(roomId: string) {
+    if (this.mockMode) {
+      console.log('Joining mock room:', roomId);
+      this.roomId = roomId;
+      this.isInitiator = false;
+      
+      // Simulate connection success
+      setTimeout(() => {
+        if (this.onConnectedCallback) {
+          this.onConnectedCallback();
+        }
+      }, 1000);
+      return;
+    }
+    
     if (!this.socket) this.connect();
     this.socket?.emit('join-room', roomId);
   }
@@ -112,6 +188,40 @@ class SocketService {
       return this.localStream;
     } catch (err) {
       console.error('Error accessing webcam:', err);
+      
+      // In mock mode, create a canvas-based fake stream
+      if (this.mockMode) {
+        console.log('Creating mock stream');
+        const canvas = document.createElement('canvas');
+        canvas.width = 640;
+        canvas.height = 480;
+        const ctx = canvas.getContext('2d');
+        
+        // Draw something on the canvas
+        if (ctx) {
+          setInterval(() => {
+            if (!ctx) return;
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px Arial';
+            ctx.fillText('Local Camera Mode', 20, 50);
+            ctx.fillText('CORS issues prevented real connection', 20, 100);
+            ctx.fillText('Current time: ' + new Date().toLocaleTimeString(), 20, 150);
+          }, 1000);
+        }
+        
+        // @ts-ignore - Canvas streams are supported but TypeScript doesn't know
+        const stream = canvas.captureStream(30);
+        this.localStream = stream;
+        
+        if (this.onStreamCallback) {
+          this.onStreamCallback(stream);
+        }
+        
+        return stream;
+      }
+      
       throw err;
     }
   }
@@ -131,7 +241,7 @@ class SocketService {
 
       this.peer.on('signal', (data) => {
         console.log('Generated signal data');
-        if (this.socket && this.roomId) {
+        if (this.socket && this.roomId && !this.mockMode) {
           this.socket.emit('signal', { roomId: this.roomId, signal: data });
         }
       });
@@ -181,6 +291,8 @@ class SocketService {
       this.socket.disconnect();
       this.socket = null;
     }
+    
+    this.mockMode = false;
   }
 
   // Register callback for when remote stream is received
@@ -211,6 +323,11 @@ class SocketService {
   // Get the current room ID (for sharing)
   getRoomId() {
     return this.roomId;
+  }
+  
+  // Check if we're in mock mode
+  isMockMode() {
+    return this.mockMode;
   }
 }
 
