@@ -21,9 +21,9 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="flex flex-col h-[600px]">
+          <div className="flex flex-col h-full">
             <Leaderboard />
-            <div className="flex-1">
+            <div className="flex-grow">
               <ChatBox />
             </div>
           </div>
