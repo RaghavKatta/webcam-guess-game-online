@@ -8,10 +8,13 @@ const WebcamDisplay = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [webcamActive, setWebcamActive] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { gameState, timer } = useGame();
 
   const startWebcam = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: true,
@@ -28,6 +31,7 @@ const WebcamDisplay = () => {
       }
     } catch (err) {
       console.error("Error accessing webcam:", err);
+      setError("Could not access your camera. Please check permissions and try again.");
       setLoading(false);
     }
   };
@@ -49,16 +53,16 @@ const WebcamDisplay = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl">
+      <div className="webcam-container w-full max-w-2xl bg-white border-4 border-white rounded-xl relative overflow-hidden h-[400px]">
         <video 
           ref={videoRef} 
-          className={`rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'}`}
+          className={`w-full h-full object-cover rounded-lg ${webcamActive ? 'opacity-100' : 'opacity-0'}`}
           muted
           playsInline
         />
         
-        {!webcamActive && !loading && (
-          <div className="webcam-overlay">
+        {!webcamActive && !loading && !error && (
+          <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center p-6">
               <div className="bg-game-secondary inline-block p-4 rounded-full mb-4">
                 <CameraOff className="h-16 w-16" />
@@ -76,10 +80,29 @@ const WebcamDisplay = () => {
         )}
         
         {loading && (
-          <div className="webcam-overlay">
+          <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="animate-spin h-16 w-16 mb-4 mx-auto text-game-green" />
               <p className="text-xl">Connecting to camera...</p>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center p-6">
+              <div className="bg-red-100 inline-block p-4 rounded-full mb-4">
+                <CameraOff className="h-16 w-16 text-red-500" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-red-500">Camera Error</h3>
+              <p className="mb-4 text-gray-700">{error}</p>
+              <Button 
+                onClick={startWebcam}
+                className="bg-game-green hover:bg-game-green/90 text-white font-bold py-2 px-6 rounded-lg text-lg"
+              >
+                <Camera className="mr-2 h-6 w-6" />
+                Try Again
+              </Button>
             </div>
           </div>
         )}
