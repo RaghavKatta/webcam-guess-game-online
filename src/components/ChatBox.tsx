@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,13 +23,10 @@ const ChatBox = () => {
     e.preventDefault();
     
     if (message.trim() && gameState === 'playing') {
-      const isCorrect = isCorrectGuess(message);
-      
       addMessage({
         sender: username,
         text: message,
-        // Mark the message as correct if it contains the correct word
-        type: isCorrect ? 'correct' : 'user',
+        type: 'user',
         timestamp: new Date(),
       });
       

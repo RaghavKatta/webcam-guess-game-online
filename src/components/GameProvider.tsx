@@ -100,6 +100,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       timestamp: new Date(),
     });
     
+    // End the round when a correct guess is made
     setGameState('roundEnd');
     setCurrentWord(null);
     
@@ -118,7 +119,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Only process guesses if the game is in 'playing' state
+    // Process guesses if the game is in 'playing' state
     if (
       gameState === 'playing' && 
       message.type === 'user' && 
