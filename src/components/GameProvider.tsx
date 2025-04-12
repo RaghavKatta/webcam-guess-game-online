@@ -29,7 +29,7 @@ export interface Message {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 const GAME_DURATION = 60; // seconds
-const WORDS = ['apple', 'book', 'cat', 'dog', 'elephant', 'flower', 'guitar', 'house', 'igloo', 'jacket'];
+const FIXED_WORD = 'apple'; // The fixed word to guess
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>('waiting');
@@ -49,21 +49,16 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const { toast } = useToast();
 
-  const getRandomWord = () => {
-    const randomIndex = Math.floor(Math.random() * WORDS.length);
-    return WORDS[randomIndex];
-  };
-
   const startGame = () => {
-    const word = getRandomWord();
-    setCurrentWord(word);
+    // Use the fixed word instead of getting a random one
+    setCurrentWord(FIXED_WORD);
     setGameState('playing');
     setTimer(GAME_DURATION);
     
     // Notify only the presenter about the word
     toast({
       title: "Your word to present is:",
-      description: word,
+      description: FIXED_WORD,
       duration: 5000,
     });
 
@@ -106,7 +101,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     setMessages(prev => [...prev, newMessage]);
     
-    // Check if the message is a correct guess
+    // Check if the message is a correct guess (case-insensitive)
     if (
       gameState === 'playing' && 
       message.type === 'user' && 

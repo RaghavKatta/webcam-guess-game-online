@@ -9,7 +9,7 @@ const WebcamDisplay = () => {
   const [webcamActive, setWebcamActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { gameState, timer } = useGame();
+  const { gameState, timer, currentWord } = useGame();
 
   const startWebcam = async () => {
     setLoading(true);
@@ -110,6 +110,12 @@ const WebcamDisplay = () => {
         {webcamActive && gameState === 'playing' && (
           <div className="absolute top-4 right-4 bg-white text-game-primary font-bold text-2xl rounded-full h-16 w-16 flex items-center justify-center border-4 border-game-primary">
             {timer}
+          </div>
+        )}
+        
+        {webcamActive && gameState === 'playing' && currentWord && (
+          <div className="absolute top-4 left-4 bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
+            Current Word: <span className="text-game-green">{currentWord}</span>
           </div>
         )}
       </div>

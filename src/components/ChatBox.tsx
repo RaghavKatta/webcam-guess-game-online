@@ -7,21 +7,31 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGame } from './GameProvider';
 
 const ChatBox = () => {
-  const { messages, addMessage, username, gameState } = useGame();
+  const { messages, addMessage, username, gameState, currentWord } = useGame();
   const [message, setMessage] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Helper function to check if a message includes the current word
+  const isCorrectGuess = (text: string) => {
+    if (!currentWord) return false;
+    return text.toLowerCase().includes(currentWord.toLowerCase());
+  };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (message.trim() && gameState === 'playing') {
+      const isCorrect = isCorrectGuess(message);
+      
       addMessage({
         sender: username,
         text: message,
-        type: 'user',
+        // Mark the message as correct if it contains the correct word
+        type: isCorrect ? 'correct' : 'user',
         timestamp: new Date(),
       });
+      
       setMessage('');
       
       // Focus back on input
