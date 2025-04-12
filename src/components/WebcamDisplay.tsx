@@ -70,7 +70,7 @@ const WebcamDisplay = () => {
               <div className="bg-game-secondary inline-block p-4 rounded-full mb-4">
                 <CameraOff className="h-16 w-16" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Camera is off</h3>
+              <h3 className="text-2xl font-bold mb-4">Leonardo's Camera is Off</h3>
               <Button 
                 onClick={startWebcam}
                 className="bg-game-green hover:bg-game-green/90 text-white font-bold py-2 px-6 rounded-lg text-lg"
@@ -86,7 +86,7 @@ const WebcamDisplay = () => {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="animate-spin h-16 w-16 mb-4 mx-auto text-game-green" />
-              <p className="text-xl">Connecting to camera...</p>
+              <p className="text-xl">Connecting to Leonardo's camera...</p>
             </div>
           </div>
         )}
@@ -113,7 +113,7 @@ const WebcamDisplay = () => {
         {webcamActive && gameState === 'playing' && (
           <div className="absolute top-0 inset-x-0 p-4 flex justify-between">
             <div className="bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
-              Current Word: <span className="text-game-green">{currentWord}</span>
+              Leonardo is Drawing: <span className="text-game-green">???</span>
             </div>
             
             <div className="bg-white py-2 px-4 rounded-lg text-game-primary font-bold border-2 border-game-primary">
@@ -125,9 +125,9 @@ const WebcamDisplay = () => {
         {webcamActive && gameState === 'roundEnd' && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60">
             <div className="bg-white p-6 rounded-xl text-center max-w-md">
-              <h2 className="text-2xl font-bold mb-2 text-game-primary">Round Complete!</h2>
+              <h2 className="text-2xl font-bold mb-2 text-game-primary">Leonardo Finished Drawing!</h2>
               <p className="text-lg mb-4">Current Score: <span className="font-bold text-game-green">{score}</span></p>
-              <p className="text-sm text-gray-600">Wait for a new round to start or start a new round yourself</p>
+              <p className="text-sm text-gray-600">Wait for Leonardo to start a new drawing or start a new round yourself</p>
             </div>
           </div>
         )}
@@ -155,7 +155,7 @@ const WebcamDisplay = () => {
           className="border-game-red text-game-red hover:bg-game-red/10 font-semibold"
         >
           <CameraOff className="mr-2 h-5 w-5" />
-          Turn Off Camera
+          Turn Off Leonardo's Camera
         </Button>
       )}
     </div>

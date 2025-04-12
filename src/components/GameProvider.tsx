@@ -29,7 +29,7 @@ export interface Message {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GAME_DURATION = 60; // seconds, now exported
-const FIXED_WORD = 'apple'; // The fixed word to guess
+const FIXED_WORD = 'leonardo'; // Changed to "leonardo" as the robot's name
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>('waiting');
@@ -41,7 +41,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     {
       id: '1',
       sender: 'System',
-      text: 'Welcome to Webcam Guess! Show an object on camera for others to guess.',
+      text: 'Welcome to Robot Drawing Guess! Watch as Leonardo the robot draws, and guess what it is!',
       type: 'system',
       timestamp: new Date(),
     },
@@ -55,14 +55,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setTimer(GAME_DURATION);
     
     toast({
-      title: "Your word to present is:",
-      description: FIXED_WORD,
+      title: "Leonardo is drawing...",
+      description: "Try to guess what the robot is drawing!",
       duration: 5000,
     });
 
     addMessage({
       sender: 'System',
-      text: 'New round started! Start guessing what you see!',
+      text: 'Leonardo has started drawing! Try to guess what it is!',
       type: 'system',
       timestamp: new Date(),
     });
@@ -73,7 +73,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setCurrentWord(null);
     addMessage({
       sender: 'System',
-      text: 'Round ended!',
+      text: 'Round ended! Leonardo has stopped drawing.',
       type: 'system',
       timestamp: new Date(),
     });
@@ -95,7 +95,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     
     addMessage({
       sender: 'System',
-      text: `Correct! The word was "${currentWord}" - You earned ${pointsEarned} points!`,
+      text: `Correct! You identified Leonardo the robot! You earned ${pointsEarned} points!`,
       type: 'correct',
       timestamp: new Date(),
     });

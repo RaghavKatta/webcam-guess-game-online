@@ -54,24 +54,24 @@ const ChatBox = () => {
   // Get placeholder text based on game state
   const getPlaceholderText = () => {
     if (gameState === 'playing') {
-      return "Type your guess...";
+      return "What is Leonardo drawing?";
     } else if (gameState === 'roundEnd') {
-      return "Round ended - wait for next round to start";
+      return "Drawing complete - wait for next round";
     } else {
-      return "Waiting for round to start...";
+      return "Waiting for Leonardo to start drawing...";
     }
   };
 
   return (
     <div className="flex flex-col h-full border-4 border-white rounded-xl bg-white shadow-md overflow-hidden">
       <div className="p-3 bg-game-primary text-white font-bold text-lg">
-        Chat & Guesses
+        Guesses & Chat
       </div>
       
       {gameState === 'playing' && (
         <div className="px-3 py-2 bg-gray-100">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium">Time remaining:</span>
+            <span className="text-sm font-medium">Time to guess:</span>
             <span className="text-sm font-bold">{timer}s</span>
           </div>
           <Progress value={(timer / GAME_DURATION) * 100} className="h-2" />
